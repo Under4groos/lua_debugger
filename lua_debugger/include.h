@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <windows.h>
+ 
 #pragma comment(lib , "lua5.1.lib")
 #pragma comment(lib , "lua51.lib")
 extern "C" {
@@ -9,5 +10,9 @@ extern "C" {
 #include "Lua/include/lauxlib.h"
 
 }
+ 
+ 
+#include "Console.h";
+
 
 using namespace std;

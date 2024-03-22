@@ -1,12 +1,11 @@
 ﻿
 
-#define LUA_INTEGER long
-#define LUA_NUMBER double
 
 #include "include.h"
-#include "Console.h";
-
 #define LUA_ERROR 1
+
+ 
+
 
 extern "C" int test(lua_State * L) {
 	size_t* size{};
@@ -35,7 +34,7 @@ extern "C" int _FindWindowEx(lua_State * L) {
 	const char* lpszClass = lua_tostring(L, 3);
 	const char* lpszWindow = lua_tostring(L, 4);
 
-	int hwnd_ = (int)FindWindowEx((HWND)hWndParent , (HWND)hWndChildAfter , (LPCWCHAR) lpszClass , (LPCWCHAR)lpszWindow);
+	int hwnd_ = (int)FindWindowEx((HWND)hWndParent , (HWND)hWndChildAfter ,  lpszClass ,lpszWindow);
 	lua_pushnumber(L, hwnd_);
 
 	return 1;
@@ -43,30 +42,34 @@ extern "C" int _FindWindowEx(lua_State * L) {
 
 
 
-
-
+ 
 
 
 int i_ = 0;
 KEY_EVENT_RECORD key;
 lua_State* lua;
+
+void add_function( const char* name , lua_CFunction f) {
+	lua_register(lua, name, f);
+}
+
+
 const char* _luafile = "main.lua";
 char fullPath[MAX_PATH];
 int main(const char* args) {
 
-
-	cout << ___GetDesktopWindow << endl;
-	
+ 
+	 
 	while (true)
 	{
 
 		lua = luaL_newstate();
-
+		
 		
 		luaL_openlibs(lua);
-		lua_register(lua, "_GetDesktopWindow", _GetDesktopWindow);
-		lua_register(lua, "test", test);
-		lua_register(lua, "_FindWindowEx", _FindWindowEx);
+		add_function("_GetDesktopWindow", _GetDesktopWindow);
+		add_function("test", test);
+		add_function("_FindWindowEx", _FindWindowEx);
 		
 		if (GetFullPathNameA(_luafile, MAX_PATH, fullPath, NULL)) {	
 			 

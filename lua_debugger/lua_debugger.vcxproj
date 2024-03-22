@@ -37,7 +37,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -103,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,9 +150,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="FileWatcher\FileWatcher.cpp" />
+    <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="lua_debugger.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FileWatcher\FileWatcher.h" />
+    <ClInclude Include="FileWatcher\FileWatcherImpl.h" />
+    <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="Console.h" />
   </ItemGroup>
