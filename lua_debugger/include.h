@@ -11,7 +11,8 @@ extern "C" {
 
 }
  
- 
+#include <fstream>
+#include <cstdio>
 #include "Console.h";
 
 

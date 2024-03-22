@@ -153,6 +153,7 @@
     <ClCompile Include="FileWatcher\FileWatcher.cpp" />
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp" />
     <ClCompile Include="lua_debugger.cpp" />
+    <ClCompile Include="lua_modules\m_winapi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileWatcher\FileWatcher.h" />
@@ -160,6 +161,7 @@
     <ClInclude Include="FileWatcher\FileWatcherWin32.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="lua_modules\m_winapi.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

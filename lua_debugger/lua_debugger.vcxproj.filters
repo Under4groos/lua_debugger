@@ -27,6 +27,9 @@
     <ClCompile Include="FileWatcher\FileWatcherWin32.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="lua_modules\m_winapi.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include.h">
@@ -42,6 +45,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Console.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="lua_modules\m_winapi.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,67 +2,79 @@
 
 
 #include "include.h"
-#define LUA_ERROR 1
+
+ 
+#include "lua_modules/m_winapi.h"
+#include <string>
 
  
 
-
-extern "C" int test(lua_State * L) {
-	size_t* size{};
-	const char* name = lua_tolstring(L, 1, size);
-	cout << name << endl;
-
-	lua_pushboolean(L, true);
-
-	return 1;
-}
-
-int ___GetDesktopWindow = (int)GetDesktopWindow();
-
-extern "C" int _GetDesktopWindow(lua_State * L) {
-	
-	
-	lua_pushnumber(L, ___GetDesktopWindow);
-
-	return 1;
-}
-
-extern "C" int _FindWindowEx(lua_State * L) {
-
-	int hWndParent = lua_tointeger(L, 1);
-	int hWndChildAfter = lua_tointeger(L, 2);
-	const char* lpszClass = lua_tostring(L, 3);
-	const char* lpszWindow = lua_tostring(L, 4);
-
-	int hwnd_ = (int)FindWindowEx((HWND)hWndParent , (HWND)hWndChildAfter ,  lpszClass ,lpszWindow);
-	lua_pushnumber(L, hwnd_);
-
-	return 1;
-}
-
-
-
- 
-
-
+std::string _lua_data = "";
 int i_ = 0;
 KEY_EVENT_RECORD key;
 lua_State* lua;
-
+LPARAM _LPARAM = 0;
 void add_function( const char* name , lua_CFunction f) {
 	lua_register(lua, name, f);
 }
+std::string file_read(const char* path) {
+	std::string __line;
+	std::ifstream file(path);
+	if (file.is_open()) {
+
+		std::string line;
+		while (std::getline(file, line)) {
+			__line += line;
+		}
+		file.close();
+	}
+	else {
+		std::cout << "Unable to open file";
+	}
+	return __line;
+}
+extern "C" int RunLua(lua_State * L) {
+	size_t* size{};
+	const char* name = lua_tolstring(L, 1, size);
+	_lua_data += "\n" + file_read(name);
+	lua_pushboolean(L, true);
+	return 1;
+}
+
+static void fatal(const char* message) {
+	fprintf(stderr, "%s\n", message);
+	 
+}
+
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam) {
+	HWND hNextWin;
+	hNextWin = FindWindowExA(hwnd, 0, "SHELLDLL_DefView", 0);
+	if (hNextWin) {
+		*(HWND*)lParam = hwnd;
+		return false;
+	}
+	return true;
+}
 
 
-const char* _luafile = "main.lua";
+
+extern "C" int _FindWindowSHELLDLLDefView(lua_State * L) {
+
+	lua_pushnumber(L, (int)_LPARAM);
+
+	return 1;
+}
+
+
+const char* _luafile = "lua/main.lua";
 char fullPath[MAX_PATH];
 int main(const char* args) {
 
- 
+	 
 	 
 	while (true)
 	{
-
+		_lua_data = "";
 		lua = luaL_newstate();
 		
 		
@@ -70,15 +82,29 @@ int main(const char* args) {
 		add_function("_GetDesktopWindow", _GetDesktopWindow);
 		add_function("test", test);
 		add_function("_FindWindowEx", _FindWindowEx);
-		
+		add_function("RunLua", RunLua);
+		add_function("_FindWindowSHELLDLLDefView", _FindWindowSHELLDLLDefView);
+
 		if (GetFullPathNameA(_luafile, MAX_PATH, fullPath, NULL)) {	
 			 
-			cout << fullPath << endl;
+			cout << "Read file: " <<  fullPath << endl;
 
-			int error = luaL_dofile(lua, fullPath);
-			if(error == LUA_ERROR)
-				cout << error << endl;
+			//_lua_data = file_read(fullPath);
 
+			try
+			{
+				int error = luaL_dofile(lua, fullPath);
+				if (error == 1) {
+					fatal(lua_tostring(lua, -1));
+				}
+			}
+			catch (const std::exception& e)
+			{
+				cout << e.what() << endl;
+			}
+		
+				 
+			 
 		}
 		else {
 			DWORD errCode = GetLastError();
@@ -89,7 +115,7 @@ int main(const char* args) {
 		lua_close(lua);
 
 		Console::getconchar( key);
-		 
+		cout << "\n--------------\n" << endl;
 	}
 	
 
